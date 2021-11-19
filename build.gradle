@@ -1,0 +1,43 @@
+plugins {
+  id 'checkstyle'
+}
+
+apply plugin: 'java'
+
+group = 'org.opendatadiscovery'
+version = "${version != 'unspecified' ? version : '0.0.1-SNAPSHOT'}"
+
+sourceCompatibility = '11'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+
+    compileOnly "org.projectlombok:lombok:$lombokVersion"
+    annotationProcessor "org.projectlombok:lombok:$lombokVersion"
+
+    testImplementation "org.junit.jupiter:junit-jupiter-api:$junitJupiterVersion"
+    testImplementation "org.junit.jupiter:junit-jupiter-params:$junitJupiterVersion"
+    testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:$junitJupiterVersion"
+}
+
+checkstyle {
+    configFile = project(':').file('config/checkstyle/checkstyle.xml')
+    configProperties = ["suppressionFile": project(':').file('config/checkstyle/suppressions.xml')]
+    ignoreFailures = false
+    maxWarnings = 0
+}
+
+tasks.withType(Checkstyle) {
+    reports {
+        xml.enabled false
+        html.enabled false
+    }
+}
+
+test {
+    useJUnitPlatform()
+    testLogging.showStandardStreams = true
+}
