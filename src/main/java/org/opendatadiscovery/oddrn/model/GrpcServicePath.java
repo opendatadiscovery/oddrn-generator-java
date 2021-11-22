@@ -6,18 +6,18 @@ import org.opendatadiscovery.oddrn.annotation.PathField;
 
 @Data
 @Builder
-public class KafkaPath implements OddrnPath {
+public class GrpcServicePath implements OddrnPath {
     @PathField
     private final String host;
 
-    @PathField(dependency = "host", prefix = "topics")
-    private final String topic;
+    @PathField(dependency = "host", prefix = "services")
+    private final String service;
 
-    @PathField(dependency = "topic", prefix = "columns")
-    private final String column;
+    @PathField(dependency = "service", prefix = "methods")
+    private final String method;
 
     @Override
     public String prefix() {
-        return "//kafka";
+        return "//grpc";
     }
 }

@@ -16,7 +16,7 @@ public class AirflowPath implements OddrnPath {
     @PathField(dependency = "dag", prefix = "tasks")
     private final String task;
 
-    @PathField(dependency = "run", prefix = "runs")
+    @PathField(dependency = "task", prefix = "runs")
     private final String run;
 
     @Override
