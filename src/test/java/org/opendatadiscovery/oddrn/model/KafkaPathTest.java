@@ -1,8 +1,8 @@
-package org.opendatadiscovery.oddrn;
+package org.opendatadiscovery.oddrn.model;
 
 import org.junit.jupiter.api.Test;
+import org.opendatadiscovery.oddrn.AbstractGeneratorTest;
 import org.opendatadiscovery.oddrn.exception.EmptyPathValueException;
-import org.opendatadiscovery.oddrn.model.KafkaPath;
 
 public class KafkaPathTest extends AbstractGeneratorTest {
 
@@ -32,7 +32,7 @@ public class KafkaPathTest extends AbstractGeneratorTest {
     }
 
     @Test
-    public void shouldFailTablePath() throws Exception {
+    public void shouldFailTablePath() {
         shouldFail(
             KafkaPath.builder()
                 .host("1.1.1.1")

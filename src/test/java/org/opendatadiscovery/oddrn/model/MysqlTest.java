@@ -1,8 +1,8 @@
-package org.opendatadiscovery.oddrn;
+package org.opendatadiscovery.oddrn.model;
 
 import org.junit.jupiter.api.Test;
+import org.opendatadiscovery.oddrn.AbstractGeneratorTest;
 import org.opendatadiscovery.oddrn.exception.EmptyPathValueException;
-import org.opendatadiscovery.oddrn.model.MysqlPath;
 
 public class MysqlTest extends AbstractGeneratorTest {
 
@@ -25,15 +25,15 @@ public class MysqlTest extends AbstractGeneratorTest {
                 .host("1.1.1.1")
                 .database("dbname")
                 .table("test")
-                .tableColumn("id")
+                .column("id")
                 .build(),
-            "tableColumn",
+            "column",
             "//mysql/host/1.1.1.1/databases/dbname/tables/test/columns/id"
         );
     }
 
     @Test
-    public void shouldFailTablePath() throws Exception {
+    public void shouldFailTablePath() {
         shouldFail(
             MysqlPath.builder()
                 .host("1.1.1.1")

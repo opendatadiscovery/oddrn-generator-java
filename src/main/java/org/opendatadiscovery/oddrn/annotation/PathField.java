@@ -8,7 +8,7 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.FIELD)
 public @interface PathField {
-    String dependency() default "";
+    String[] dependency() default "";
 
     String prefix() default "";
 

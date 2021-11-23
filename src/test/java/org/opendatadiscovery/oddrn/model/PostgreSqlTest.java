@@ -1,41 +1,42 @@
-package org.opendatadiscovery.oddrn;
+package org.opendatadiscovery.oddrn.model;
 
 import org.junit.jupiter.api.Test;
+import org.opendatadiscovery.oddrn.AbstractGeneratorTest;
 import org.opendatadiscovery.oddrn.exception.EmptyPathValueException;
-import org.opendatadiscovery.oddrn.model.HivePath;
 
-public class HivePathTest extends AbstractGeneratorTest {
+public class PostgreSqlTest extends AbstractGeneratorTest {
+
     @Test
     public void shouldGenerateDatabasePath() throws Exception {
         shouldGeneratePath(
-            HivePath.builder()
+            PostgreSqlPath.builder()
                 .host("1.1.1.1")
                 .database("dbname")
                 .build(),
             "database",
-            "//hive/host/1.1.1.1/databases/dbname"
+            "//postgresql/host/1.1.1.1/databases/dbname"
         );
     }
 
     @Test
     public void shouldGenerateColumnPath() throws Exception {
         shouldGeneratePath(
-            HivePath.builder()
+            PostgreSqlPath.builder()
                 .host("1.1.1.1")
                 .database("dbname")
                 .schema("public")
                 .table("test")
-                .tableColumn("id")
+                .column("id")
                 .build(),
-            "tableColumn",
-            "//hive/host/1.1.1.1/databases/dbname/schemas/public/tables/test/columns/id"
+            "column",
+            "//postgresql/host/1.1.1.1/databases/dbname/schemas/public/tables/test/columns/id"
         );
     }
 
     @Test
-    public void shouldFailTablePath() throws Exception {
+    public void shouldFailTablePath() {
         shouldFail(
-            HivePath.builder()
+            PostgreSqlPath.builder()
                 .host("1.1.1.1")
                 .database("dbname")
                 .table("test")

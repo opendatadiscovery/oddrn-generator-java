@@ -22,11 +22,8 @@ public class HivePath implements OddrnPath {
     @PathField(dependency = "schema", prefix = "views")
     private final String view;
 
-    @PathField(dependency = "table", prefix = "columns")
-    private final String tableColumn;
-
-    @PathField(dependency = "view", prefix = "columns")
-    private final String viewColumn;
+    @PathField(dependency = {"table", "view"}, prefix = "columns")
+    private final String column;
 
     @PathField(prefix = "owners")
     private final String owner;

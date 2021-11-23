@@ -1,8 +1,8 @@
-package org.opendatadiscovery.oddrn;
+package org.opendatadiscovery.oddrn.model;
 
 import org.junit.jupiter.api.Test;
+import org.opendatadiscovery.oddrn.AbstractGeneratorTest;
 import org.opendatadiscovery.oddrn.exception.EmptyPathValueException;
-import org.opendatadiscovery.oddrn.model.KafkaConnectorPath;
 
 public class KafkaConnectorPathTest extends AbstractGeneratorTest {
 
@@ -19,7 +19,7 @@ public class KafkaConnectorPathTest extends AbstractGeneratorTest {
     }
 
     @Test
-    public void shouldFailTablePath() throws Exception {
+    public void shouldFailTablePath() {
         shouldFail(
             KafkaConnectorPath.builder()
                 .connector("sink")

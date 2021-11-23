@@ -1,10 +1,10 @@
 package org.opendatadiscovery.oddrn.model;
 
 import lombok.Builder;
-import lombok.Getter;
+import lombok.Data;
 import org.opendatadiscovery.oddrn.annotation.PathField;
 
-@Getter
+@Data
 @Builder
 public class PostgreSqlPath implements OddrnPath {
     @PathField
@@ -22,11 +22,8 @@ public class PostgreSqlPath implements OddrnPath {
     @PathField(dependency = "schema", prefix = "views")
     private final String view;
 
-    @PathField(dependency = "table", prefix = "columns")
-    private final String tableColumn;
-
-    @PathField(dependency = "view", prefix = "columns")
-    private final String viewColumn;
+    @PathField(dependency = {"table", "view"}, prefix = "columns")
+    private final String column;
 
     @Override
     public String prefix() {

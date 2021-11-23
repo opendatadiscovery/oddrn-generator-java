@@ -1,8 +1,8 @@
-package org.opendatadiscovery.oddrn;
+package org.opendatadiscovery.oddrn.model;
 
 import org.junit.jupiter.api.Test;
+import org.opendatadiscovery.oddrn.AbstractGeneratorTest;
 import org.opendatadiscovery.oddrn.exception.EmptyPathValueException;
-import org.opendatadiscovery.oddrn.model.DynamodbPath;
 
 public class DynamodbPathTest extends AbstractGeneratorTest {
     @Test
@@ -33,7 +33,7 @@ public class DynamodbPathTest extends AbstractGeneratorTest {
     }
 
     @Test
-    public void shouldFailColumnPath() throws Exception {
+    public void shouldFailColumnPath() {
         shouldFail(
             DynamodbPath.builder()
                 .account("7771111")

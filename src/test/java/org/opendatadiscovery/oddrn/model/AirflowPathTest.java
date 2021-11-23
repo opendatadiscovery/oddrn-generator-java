@@ -1,9 +1,9 @@
-package org.opendatadiscovery.oddrn;
+package org.opendatadiscovery.oddrn.model;
 
 import java.util.UUID;
 import org.junit.jupiter.api.Test;
+import org.opendatadiscovery.oddrn.AbstractGeneratorTest;
 import org.opendatadiscovery.oddrn.exception.EmptyPathValueException;
-import org.opendatadiscovery.oddrn.model.AirflowPath;
 
 public class AirflowPathTest extends AbstractGeneratorTest {
     @Test
@@ -32,7 +32,7 @@ public class AirflowPathTest extends AbstractGeneratorTest {
     }
 
     @Test
-    public void shouldFailRunPath() throws Exception {
+    public void shouldFailRunPath() {
         shouldFail(
             AirflowPath.builder()
                 .host("1.1.1.1")

@@ -9,16 +9,18 @@ import org.opendatadiscovery.oddrn.annotation.PathField;
 public class MysqlPath implements OddrnPath {
     @PathField
     private final String host;
+
     @PathField(dependency = "host", prefix = "databases")
     private final String database;
+
     @PathField(dependency = "database", prefix = "tables")
     private final String table;
+
     @PathField(dependency = "database", prefix = "views")
     private final String view;
-    @PathField(dependency = "table", prefix = "columns")
-    private final String tableColumn;
-    @PathField(dependency = "view", prefix = "columns")
-    private final String viewColumn;
+
+    @PathField(dependency = {"table", "view"}, prefix = "columns")
+    private final String column;
 
     @Override
     public String prefix() {
