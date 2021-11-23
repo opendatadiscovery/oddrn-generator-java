@@ -36,8 +36,8 @@ public class JdbcProcessors {
         }
     }
 
-    public  <T extends OddrnPath> String url(final Class<T> clazz, final T path, final int port) {
-        final JdbcProcessor<T> processor = (JdbcProcessor<T>) processorMapByClass.get(clazz);
+    public  <T extends OddrnPath> String url(final T path, final int port) {
+        final JdbcProcessor<T> processor = (JdbcProcessor<T>) processorMapByClass.get(path.getClass());
         if (processor != null) {
             return processor.url(path, port);
         } else {
