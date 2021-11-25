@@ -1,20 +1,24 @@
 plugins {
   id 'checkstyle'
+  id 'java-library'
+  id 'maven-publish'
 }
-
-apply plugin: 'java'
 
 group = 'org.opendatadiscovery'
 version = "${version != 'unspecified' ? version : '0.0.1-SNAPSHOT'}"
 
-sourceCompatibility = '11'
+java {
+    sourceCompatibility = JavaVersion.VERSION_11
+    targetCompatibility = JavaVersion.VERSION_11
+}
+
 
 repositories {
+    mavenLocal()
     mavenCentral()
 }
 
 dependencies {
-
     compileOnly "org.projectlombok:lombok:$lombokVersion"
     annotationProcessor "org.projectlombok:lombok:$lombokVersion"
 
@@ -40,4 +44,12 @@ tasks.withType(Checkstyle) {
 test {
     useJUnitPlatform()
     testLogging.showStandardStreams = true
+}
+
+publishing {
+    publications {
+        maven(MavenPublication) {
+            from components.java
+        }
+    }
 }
