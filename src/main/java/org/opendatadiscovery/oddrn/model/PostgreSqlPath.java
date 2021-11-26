@@ -5,7 +5,7 @@ import lombok.Data;
 import org.opendatadiscovery.oddrn.annotation.PathField;
 
 @Data
-@Builder
+@Builder(toBuilder = true)
 public class PostgreSqlPath implements OddrnPath {
     @PathField
     private final String host;

@@ -5,7 +5,7 @@ import lombok.Data;
 import org.opendatadiscovery.oddrn.annotation.PathField;
 
 @Data
-@Builder
+@Builder(toBuilder = true)
 public class SnowflakePath implements OddrnPath {
     @PathField(prefix = "warehouses")
     private final String warehouse;
