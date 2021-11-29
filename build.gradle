@@ -1,7 +1,8 @@
 plugins {
-  id 'checkstyle'
-  id 'java-library'
-  id 'maven-publish'
+    id 'checkstyle'
+    id 'java-library'
+    id 'signing'
+    id 'maven-publish'
 }
 
 group = 'org.opendatadiscovery'
@@ -46,10 +47,77 @@ test {
     testLogging.showStandardStreams = true
 }
 
+task sourceJar(type: Jar) {
+    classifier "sources"
+    from sourceSets.main.allJava
+}
+
+task javadocJar(type: Jar, dependsOn: javadoc) {
+    classifier "javadoc"
+    from javadoc.destinationDir
+}
+
+artifacts {
+    archives sourceJar, javadocJar
+}
+
+signing {
+    sign(publishing.publications)
+}
+
 publishing {
+    repositories {
+        maven {
+            url "https://s01.oss.sonatype.org/service/local/staging/deploy/maven2"
+            credentials {
+                username sonatypeUsername
+                password sonatypePassword
+            }
+        }
+    }
+
     publications {
         maven(MavenPublication) {
+            groupId = 'org.opendatadiscovery'
+            artifactId = 'oddrn-generator-java'
+            version = version
+
             from components.java
+
+            artifact(sourceJar) {
+                classifier = 'sources'
+            }
+
+            artifact(javadocJar) {
+                classifier = 'javadoc'
+            }
+
+            pom {
+                name = 'Java ODDRN Generator'
+                description = 'OpenDataDiscovery Resource Name generator for Java'
+                url = 'https://github.com/opendatadiscovery/oddrn-generator-java'
+
+                licenses {
+                    license {
+                        name = 'The Apache License, Version 2.0'
+                        url = 'https://www.apache.org/licenses/LICENSE-2.0.txt'
+                    }
+                }
+
+                developers {
+                    developer {
+                        id = 'gosin'
+                        name = 'German Osin'
+                        organization = 'opendatadiscovery.org'
+                    }
+                }
+
+                scm {
+                    connection = 'scm:git:git://github.com/opendatadiscovery/oddrn-generator-java.git'
+                    developerConnection = 'scm:git:git://github.com/opendatadiscovery/oddrn-generator-java.git'
+                    url = 'https://github.com/opendatadiscovery/oddrn-generator-java'
+                }
+            }
         }
     }
 }
