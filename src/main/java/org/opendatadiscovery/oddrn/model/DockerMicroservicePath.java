@@ -6,15 +6,13 @@ import org.opendatadiscovery.oddrn.annotation.PathField;
 
 @Data
 @Builder(toBuilder = true)
-public class KafkaConnectorPath implements OddrnPath {
-    @PathField
-    private final String host;
+public class DockerMicroservicePath implements OddrnPath {
 
-    @PathField(dependency = "host", prefix = "connectors")
-    private final String connector;
+    @PathField
+    private final String image;
 
     @Override
     public String prefix() {
-        return "//kafkaconnect";
+        return "//microservice/docker";
     }
 }

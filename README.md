@@ -20,7 +20,8 @@ TBD
 
 ### Generator methods
 * generate(OddrnPath path, String field) - Get oddrn string by path.
-* validate(OddrnPath path, String field) - Validate oddrn path
+* validatePath(OddrnPath path, String field) - Validate oddrn path
+* parse(String oddrn) - Parse oddrn and get OddrnPath
 
 ### Example usage
 ```java
@@ -32,9 +33,9 @@ final String oddrn = generator.generate(
         .database("dbname")
         .schema("public")
         .table("test")
-        .tableColumn("id")
+        .column("id")
         .build(),
-    , "tableColumn");
+    , "column");
 
 # //postgresql/host/1.1.1.1/databases/dbname/schemas/public/tables/test/columns/id
 
@@ -48,9 +49,9 @@ final String oddrn = generator.generate(
         .host("1.1.1.1")
         .database("dbname")
         .schema("public")
-        .tableColumn("id")
+        .column("id")
         .build(),
-    , "tableColumn");
+    , "column");
 # WrongPathOrderException: 'column' can not be without 'table' attribute
 ```
 * PathDoestExistException - raises when trying to get not existing oddrn path
@@ -60,7 +61,7 @@ final String oddrn = generator.generate(
         .host("1.1.1.1")
         .database("dbname")
         .schema("public")
-        .tableColumn("id")
+        .column("id")
         .build(),
     , "job");
 

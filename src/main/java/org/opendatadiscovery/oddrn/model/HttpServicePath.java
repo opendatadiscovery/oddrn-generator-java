@@ -6,15 +6,18 @@ import org.opendatadiscovery.oddrn.annotation.PathField;
 
 @Data
 @Builder(toBuilder = true)
-public class KafkaConnectorPath implements OddrnPath {
+public class HttpServicePath implements OddrnPath {
     @PathField
     private final String host;
 
-    @PathField(dependency = "host", prefix = "connectors")
-    private final String connector;
+    @PathField(dependency = "host")
+    private final String method;
+
+    @PathField(dependency = "method")
+    private final String path;
 
     @Override
     public String prefix() {
-        return "//kafkaconnect";
+        return "//http";
     }
 }

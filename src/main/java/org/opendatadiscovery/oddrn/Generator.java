@@ -17,7 +17,17 @@ import lombok.SneakyThrows;
 import org.opendatadiscovery.oddrn.annotation.PathField;
 import org.opendatadiscovery.oddrn.exception.EmptyPathValueException;
 import org.opendatadiscovery.oddrn.exception.PathDoesntExistException;
-import org.opendatadiscovery.oddrn.model.*;
+import org.opendatadiscovery.oddrn.model.AirflowPath;
+import org.opendatadiscovery.oddrn.model.DynamodbPath;
+import org.opendatadiscovery.oddrn.model.GrpcServicePath;
+import org.opendatadiscovery.oddrn.model.HivePath;
+import org.opendatadiscovery.oddrn.model.KafkaConnectorPath;
+import org.opendatadiscovery.oddrn.model.KafkaPath;
+import org.opendatadiscovery.oddrn.model.MysqlPath;
+import org.opendatadiscovery.oddrn.model.OddrnPath;
+import org.opendatadiscovery.oddrn.model.PostgreSqlPath;
+import org.opendatadiscovery.oddrn.model.SnowflakePath;
+import org.opendatadiscovery.oddrn.util.GeneratorUtil;
 
 import static java.util.Locale.ENGLISH;
 
@@ -35,8 +45,7 @@ public class Generator {
             KafkaPath.class,
             MysqlPath.class,
             PostgreSqlPath.class,
-            SnowflakePath.class,
-            SparkPath.class
+            SnowflakePath.class
         ).collect(
             Collectors.toMap(
                 c -> c,
@@ -56,7 +65,7 @@ public class Generator {
         final Optional<OddrnPath> result = Optional.empty();
 
         for (final ModelDescription description : this.cache.values()) {
-            if (oddrn.startsWith(description.prefix)) {
+            if (oddrn.startsWith(description.prefix+"/")) {
                 final String withoutPrefix = oddrn.substring(description.prefix.length());
                 final Object builder = description.builderMethod.invoke(null);
                 int nextFieldPos = 0;
@@ -77,7 +86,7 @@ public class Generator {
                         final ModelField modelField = description.prefixes.get(fieldName);
 
                         if (modelField != null) {
-                            modelField.setMethod.invoke(builder, value);
+                            modelField.setMethod.invoke(builder, GeneratorUtil.unescape(value));
                         }
                     }
                 } while (nextFieldPos >= 0);
@@ -152,7 +161,7 @@ public class Generator {
                 builder.append("/");
                 builder.append(prefix);
                 builder.append("/");
-                builder.append(modelField.readMethod.invoke(model));
+                builder.append(GeneratorUtil.escape(modelField.readMethod.invoke(model).toString()));
             }
 
             return builder.toString();
