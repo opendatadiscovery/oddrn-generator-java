@@ -3,16 +3,20 @@ plugins {
     id 'java-library'
     id 'signing'
     id 'maven-publish'
+    id 'io.github.gradle-nexus.publish-plugin' version '1.1.0'
 }
 
 group = 'org.opendatadiscovery'
-version = "${version != 'unspecified' ? version : '0.0.1-SNAPSHOT'}"
+version = file('VERSION').text
 
 java {
     sourceCompatibility = JavaVersion.VERSION_11
     targetCompatibility = JavaVersion.VERSION_11
 }
 
+ext {
+    env = findProperty('env') ?: 'dev'
+}
 
 repositories {
     mavenLocal()
@@ -61,17 +65,21 @@ artifacts {
     archives sourceJar, javadocJar
 }
 
-signing {
-    sign(publishing.publications)
+if (env == 'prod') {
+    signing {
+        sign(publishing.publications)
+    }
 }
 
 publishing {
-    repositories {
-        maven {
-            url "https://s01.oss.sonatype.org/service/local/staging/deploy/maven2"
-            credentials {
-                username sonatypeUsername
-                password sonatypePassword
+    if (env == 'prod') {
+        repositories {
+            maven {
+                url "https://s01.oss.sonatype.org/service/local/staging/deploy/maven2"
+                credentials {
+                    username sonatypeUsername
+                    password sonatypePassword
+                }
             }
         }
     }
@@ -118,6 +126,18 @@ publishing {
                     url = 'https://github.com/opendatadiscovery/oddrn-generator-java'
                 }
             }
+        }
+    }
+}
+
+nexusPublishing {
+    repositories {
+        sonatype {
+            nexusUrl = uri("https://s01.oss.sonatype.org/service/local/")
+            snapshotRepositoryUrl = uri("https://s01.oss.sonatype.org/content/repositories/snapshots/")
+
+            username = sonatypeUsername
+            password = sonatypePassword
         }
     }
 }
