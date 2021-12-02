@@ -27,6 +27,7 @@ import org.opendatadiscovery.oddrn.model.MysqlPath;
 import org.opendatadiscovery.oddrn.model.OddrnPath;
 import org.opendatadiscovery.oddrn.model.PostgreSqlPath;
 import org.opendatadiscovery.oddrn.model.SnowflakePath;
+import org.opendatadiscovery.oddrn.model.SparkPath;
 import org.opendatadiscovery.oddrn.util.GeneratorUtil;
 
 import static java.util.Locale.ENGLISH;
@@ -45,7 +46,8 @@ public class Generator {
             KafkaPath.class,
             MysqlPath.class,
             PostgreSqlPath.class,
-            SnowflakePath.class
+            SnowflakePath.class,
+            SparkPath.class
         ).collect(
             Collectors.toMap(
                 c -> c,
