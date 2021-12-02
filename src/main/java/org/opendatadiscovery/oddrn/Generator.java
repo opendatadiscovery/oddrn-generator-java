@@ -17,16 +17,7 @@ import lombok.SneakyThrows;
 import org.opendatadiscovery.oddrn.annotation.PathField;
 import org.opendatadiscovery.oddrn.exception.EmptyPathValueException;
 import org.opendatadiscovery.oddrn.exception.PathDoesntExistException;
-import org.opendatadiscovery.oddrn.model.AirflowPath;
-import org.opendatadiscovery.oddrn.model.DynamodbPath;
-import org.opendatadiscovery.oddrn.model.GrpcServicePath;
-import org.opendatadiscovery.oddrn.model.HivePath;
-import org.opendatadiscovery.oddrn.model.KafkaConnectorPath;
-import org.opendatadiscovery.oddrn.model.KafkaPath;
-import org.opendatadiscovery.oddrn.model.MysqlPath;
-import org.opendatadiscovery.oddrn.model.OddrnPath;
-import org.opendatadiscovery.oddrn.model.PostgreSqlPath;
-import org.opendatadiscovery.oddrn.model.SnowflakePath;
+import org.opendatadiscovery.oddrn.model.*;
 import org.opendatadiscovery.oddrn.util.GeneratorUtil;
 
 import static java.util.Locale.ENGLISH;
@@ -45,7 +36,8 @@ public class Generator {
             KafkaPath.class,
             MysqlPath.class,
             PostgreSqlPath.class,
-            SnowflakePath.class
+            SnowflakePath.class,
+            SparkPath.class
         ).collect(
             Collectors.toMap(
                 c -> c,
