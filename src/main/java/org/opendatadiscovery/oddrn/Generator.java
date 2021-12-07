@@ -108,7 +108,7 @@ public class Generator {
                                     String.format("Field path of type %s is not supported", returnType));
                             }
 
-                            modelField.setMethod.invoke(builder, mapper.apply(stringValue));
+                            modelField.setMethod.invoke(builder, mapper.apply(GeneratorUtil.unescape(stringValue)));
                         }
                     }
                 } while (nextFieldPos >= 0);
