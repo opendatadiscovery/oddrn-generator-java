@@ -9,6 +9,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import lombok.Builder;
@@ -24,15 +25,24 @@ import org.opendatadiscovery.oddrn.model.HivePath;
 import org.opendatadiscovery.oddrn.model.KafkaConnectorPath;
 import org.opendatadiscovery.oddrn.model.KafkaPath;
 import org.opendatadiscovery.oddrn.model.MysqlPath;
+import org.opendatadiscovery.oddrn.model.ODDPlatformDataSourcePath;
 import org.opendatadiscovery.oddrn.model.OddrnPath;
 import org.opendatadiscovery.oddrn.model.PostgreSqlPath;
 import org.opendatadiscovery.oddrn.model.SnowflakePath;
 
 import static java.util.Locale.ENGLISH;
+import static java.util.function.Function.identity;
 
 public class Generator {
-
     static final String GET_PREFIX = "get";
+
+    private static final Map<Class<?>, Function<String, ?>> RETURN_TYPE_MAPPING = Map.of(
+        String.class, identity(),
+        Integer.class, Integer::parseInt,
+        Long.class, Long::parseLong,
+        Double.class, Double::parseDouble,
+        Float.class, Float::parseFloat
+    );
 
     private final Map<Class<? extends OddrnPath>, ModelDescription> cache =
         Stream.of(
@@ -44,7 +54,8 @@ public class Generator {
             KafkaPath.class,
             MysqlPath.class,
             PostgreSqlPath.class,
-            SnowflakePath.class
+            SnowflakePath.class,
+            ODDPlatformDataSourcePath.class
         ).collect(
             Collectors.toMap(
                 c -> c,
@@ -76,16 +87,25 @@ public class Generator {
 
                     if (fieldNamePos >= 0 && valuePos >= 0) {
                         final String fieldName = withoutPrefix.substring(fieldNamePos + 1, valuePos);
-                        final String value;
+                        final String stringValue;
                         if (nextFieldPos > 0) {
-                            value = withoutPrefix.substring(valuePos + 1, nextFieldPos);
+                            stringValue = withoutPrefix.substring(valuePos + 1, nextFieldPos);
                         } else {
-                            value = withoutPrefix.substring(valuePos + 1);
+                            stringValue = withoutPrefix.substring(valuePos + 1);
                         }
                         final ModelField modelField = description.prefixes.get(fieldName);
 
                         if (modelField != null) {
-                            modelField.setMethod.invoke(builder, value);
+                            final Class<?> returnType = modelField.getReadMethod().getReturnType();
+
+                            final Function<String, ?> mapper = RETURN_TYPE_MAPPING.get(returnType);
+
+                            if (mapper == null) {
+                                throw new IllegalArgumentException(
+                                    String.format("Field path of type %s is not supported", returnType));
+                            }
+
+                            modelField.setMethod.invoke(builder, mapper.apply(stringValue));
                         }
                     }
                 } while (nextFieldPos >= 0);
@@ -270,7 +290,7 @@ public class Generator {
             for (final Field field : currentClazz.getDeclaredFields()) {
                 final PathField[] pathFields = field.getAnnotationsByType(PathField.class);
                 final Method getMethod = clazz.getMethod(GET_PREFIX + capitalize(field.getName()));
-                final Method setMethod = builderClazz.getMethod(field.getName(), String.class);
+                final Method setMethod = builderClazz.getMethod(field.getName(), getMethod.getReturnType());
 
                 final ModelField model = ModelField.builder()
                     .field(field)
