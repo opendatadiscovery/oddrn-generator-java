@@ -8,7 +8,7 @@ import java.util.UUID;
 
 public class SparkPathTest extends AbstractGeneratorTest {
     @Test
-    public void shouldGenerateDagPath() throws Exception {
+    public void shouldGenerateJobPath() throws Exception {
         shouldGeneratePath(
             SparkPath.builder()
                 .host("127.0.0.1")
@@ -20,7 +20,7 @@ public class SparkPathTest extends AbstractGeneratorTest {
     }
 
     @Test
-    public void shouldGenerateTaskPath() throws Exception {
+    public void shouldGenerateRunPath() throws Exception {
         shouldGeneratePath(
             SparkPath.builder()
                 .host("127.0.0.1")
