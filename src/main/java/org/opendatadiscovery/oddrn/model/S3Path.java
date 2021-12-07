@@ -8,6 +8,9 @@ import org.opendatadiscovery.oddrn.annotation.PathField;
 @Builder
 public class S3Path implements OddrnPath {
     @PathField
+    private final String region;
+
+    @PathField(dependency = "region", prefix = "buckets")
     private final String bucket;
 
     @PathField(dependency = "bucket", prefix = "keys")

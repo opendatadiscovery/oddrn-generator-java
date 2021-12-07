@@ -8,14 +8,27 @@ import java.util.UUID;
 
 public class S3PathTest extends AbstractGeneratorTest {
     @Test
+    public void shouldGenerateBucketPath() throws Exception {
+        shouldGeneratePath(
+                S3Path.builder()
+                        .region("us-west-2")
+                        .bucket("my_bucket")
+                        .build(),
+                "bucket",
+                "//s3/region/us-west-2/buckets/my_bucket"
+        );
+    }
+
+    @Test
     public void shouldGenerateKeyPath() throws Exception {
         shouldGeneratePath(
-            S3Path.builder()
-                .bucket("my_bucket")
-                .key("file1")
-                .build(),
-            "key",
-            "//s3/bucket/my_bucket/keys/file1"
+                S3Path.builder()
+                        .region("us-west-2")
+                        .bucket("my_bucket")
+                        .key("file1")
+                        .build(),
+                "key",
+                "//s3/region/us-west-2/buckets/my_bucket/keys/file1"
         );
     }
 
@@ -23,10 +36,11 @@ public class S3PathTest extends AbstractGeneratorTest {
     public void shouldFailKeyPath() {
         shouldFail(
                 S3Path.builder()
-                .key(UUID.randomUUID().toString())
-                .build(),
-            "key",
-            EmptyPathValueException.class
+                        .region("us-west-2")
+                        .key(UUID.randomUUID().toString())
+                        .build(),
+                "key",
+                EmptyPathValueException.class
         );
     }
 }
