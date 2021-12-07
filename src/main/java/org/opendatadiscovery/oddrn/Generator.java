@@ -29,6 +29,8 @@ import org.opendatadiscovery.oddrn.model.ODDPlatformDataSourcePath;
 import org.opendatadiscovery.oddrn.model.OddrnPath;
 import org.opendatadiscovery.oddrn.model.PostgreSqlPath;
 import org.opendatadiscovery.oddrn.model.SnowflakePath;
+import org.opendatadiscovery.oddrn.model.SparkPath;
+import org.opendatadiscovery.oddrn.util.GeneratorUtil;
 
 import static java.util.Locale.ENGLISH;
 import static java.util.function.Function.identity;
@@ -55,6 +57,7 @@ public class Generator {
             MysqlPath.class,
             PostgreSqlPath.class,
             SnowflakePath.class,
+            SparkPath.class,
             ODDPlatformDataSourcePath.class
         ).collect(
             Collectors.toMap(
@@ -75,7 +78,7 @@ public class Generator {
         final Optional<OddrnPath> result = Optional.empty();
 
         for (final ModelDescription description : this.cache.values()) {
-            if (oddrn.startsWith(description.prefix)) {
+            if (oddrn.startsWith(description.prefix+"/")) {
                 final String withoutPrefix = oddrn.substring(description.prefix.length());
                 final Object builder = description.builderMethod.invoke(null);
                 int nextFieldPos = 0;
@@ -180,7 +183,7 @@ public class Generator {
                 builder.append("/");
                 builder.append(prefix);
                 builder.append("/");
-                builder.append(modelField.readMethod.invoke(model));
+                builder.append(GeneratorUtil.escape(modelField.readMethod.invoke(model).toString()));
             }
 
             return builder.toString();

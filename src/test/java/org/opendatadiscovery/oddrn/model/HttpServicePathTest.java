@@ -4,27 +4,28 @@ import org.junit.jupiter.api.Test;
 import org.opendatadiscovery.oddrn.AbstractGeneratorTest;
 import org.opendatadiscovery.oddrn.exception.EmptyPathValueException;
 
-public class KafkaConnectorPathTest extends AbstractGeneratorTest {
-
+public class HttpServicePathTest extends AbstractGeneratorTest {
     @Test
-    public void shouldGenerateConnectorPath() throws Exception {
+    public void shouldGenerateDatabasePath() throws Exception {
         shouldGeneratePath(
-            KafkaConnectorPath.builder()
+            HttpServicePath.builder()
                 .host("1.1.1.1")
-                .connector("sink")
+                .path("/entites/1")
+                .method("GET")
                 .build(),
-            "connector",
-            "//kafkaconnect/host/1.1.1.1/connectors/sink"
+            "path",
+            "//http/host/1.1.1.1/method/GET/path/\\\\entites\\\\1"
         );
     }
 
     @Test
     public void shouldFailTablePath() {
         shouldFail(
-            KafkaConnectorPath.builder()
-                .connector("sink")
+            HttpServicePath.builder()
+                .host("1.1.1.1")
+                .path("/entites/1")
                 .build(),
-            "connector",
+            "path",
             EmptyPathValueException.class
         );
     }

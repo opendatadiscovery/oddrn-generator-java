@@ -16,6 +16,7 @@ TBD
 * hive - HivePath
 * dynamodb - DynamodbPath
 * grpc - GrpcServicePath
+* spark - SparkPath
 
 ### Generator methods
 * generate(OddrnPath path, String field) - Get oddrn string by path.
