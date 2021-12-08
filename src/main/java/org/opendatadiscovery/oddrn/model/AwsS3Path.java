@@ -18,6 +18,6 @@ public class AwsS3Path implements OddrnPath {
 
     @Override
     public String prefix() {
-        return "//awsS3";
+        return "//s3-aws";
     }
 }
