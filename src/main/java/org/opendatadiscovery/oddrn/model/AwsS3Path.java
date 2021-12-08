@@ -6,7 +6,7 @@ import org.opendatadiscovery.oddrn.annotation.PathField;
 
 @Data
 @Builder
-public class S3Path implements OddrnPath {
+public class AwsS3Path implements OddrnPath {
     @PathField
     private final String region;
 
@@ -18,6 +18,6 @@ public class S3Path implements OddrnPath {
 
     @Override
     public String prefix() {
-        return "//s3";
+        return "//awsS3";
     }
 }
