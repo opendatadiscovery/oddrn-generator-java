@@ -30,6 +30,7 @@ import org.opendatadiscovery.oddrn.model.OddrnPath;
 import org.opendatadiscovery.oddrn.model.PostgreSqlPath;
 import org.opendatadiscovery.oddrn.model.SnowflakePath;
 import org.opendatadiscovery.oddrn.model.SparkPath;
+import org.opendatadiscovery.oddrn.model.AwsS3Path;
 import org.opendatadiscovery.oddrn.util.GeneratorUtil;
 
 import static java.util.Locale.ENGLISH;
@@ -58,6 +59,7 @@ public class Generator {
             PostgreSqlPath.class,
             SnowflakePath.class,
             SparkPath.class,
+            AwsS3Path.class,
             ODDPlatformDataSourcePath.class
         ).collect(
             Collectors.toMap(
