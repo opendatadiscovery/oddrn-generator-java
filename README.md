@@ -18,6 +18,7 @@ TBD
 * grpc - GrpcServicePath
 * spark - SparkPath
 * s3-aws - AwsS3Path
+* s3-custom - CustomS3Path
 
 ### Generator methods
 * generate(OddrnPath path, String field) - Get oddrn string by path.
