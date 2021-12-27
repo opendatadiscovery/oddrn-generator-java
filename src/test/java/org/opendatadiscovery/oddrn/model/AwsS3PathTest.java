@@ -31,6 +31,18 @@ public class AwsS3PathTest extends AbstractGeneratorTest {
     }
 
     @Test
+    public void shouldGeneratePathKeyPath() throws Exception {
+        shouldGeneratePath(
+                AwsS3Path.builder()
+                        .bucket("my_bucket")
+                        .key("path/to/file1")
+                        .build(),
+                "key",
+                "//s3-aws/bucket/my_bucket/keys/path\\\\to\\\\file1"
+        );
+    }
+
+    @Test
     public void shouldFailKeyPath() {
         shouldFail(
                 AwsS3Path.builder()
