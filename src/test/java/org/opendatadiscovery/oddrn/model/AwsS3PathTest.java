@@ -11,11 +11,10 @@ public class AwsS3PathTest extends AbstractGeneratorTest {
     public void shouldGenerateBucketPath() throws Exception {
         shouldGeneratePath(
                 AwsS3Path.builder()
-                        .region("us-west-2")
                         .bucket("my_bucket")
                         .build(),
                 "bucket",
-                "//s3-aws/region/us-west-2/buckets/my_bucket"
+                "//s3-aws/bucket/my_bucket"
         );
     }
 
@@ -23,12 +22,23 @@ public class AwsS3PathTest extends AbstractGeneratorTest {
     public void shouldGenerateKeyPath() throws Exception {
         shouldGeneratePath(
                 AwsS3Path.builder()
-                        .region("us-west-2")
                         .bucket("my_bucket")
                         .key("file1")
                         .build(),
                 "key",
-                "//s3-aws/region/us-west-2/buckets/my_bucket/keys/file1"
+                "//s3-aws/bucket/my_bucket/keys/file1"
+        );
+    }
+
+    @Test
+    public void shouldGeneratePathKeyPath() throws Exception {
+        shouldGeneratePath(
+                AwsS3Path.builder()
+                        .bucket("my_bucket")
+                        .key("path/to/file1")
+                        .build(),
+                "key",
+                "//s3-aws/bucket/my_bucket/keys/path\\\\to\\\\file1"
         );
     }
 
@@ -36,7 +46,6 @@ public class AwsS3PathTest extends AbstractGeneratorTest {
     public void shouldFailKeyPath() {
         shouldFail(
                 AwsS3Path.builder()
-                        .region("us-west-2")
                         .key(UUID.randomUUID().toString())
                         .build(),
                 "key",
