@@ -19,6 +19,7 @@ TBD
 * spark - SparkPath
 * s3-aws - AwsS3Path
 * s3-custom - CustomS3Path
+* hdfs - HdfsPath
 
 ### Generator methods
 * generate(OddrnPath path, String field) - Get oddrn string by path.
