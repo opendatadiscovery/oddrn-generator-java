@@ -13,9 +13,6 @@ public class HdfsPath implements OddrnPath {
     @PathField(dependency = "site", prefix = "paths")
     private final String path;
 
-    @PathField(dependency = "path", prefix = "names")
-    private final String name;
-
     @Override
     public String prefix() {
         return "//hdfs";
