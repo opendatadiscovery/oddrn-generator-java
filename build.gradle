@@ -9,13 +9,20 @@ plugins {
 group = 'org.opendatadiscovery'
 version = file('VERSION').text
 
-java {
-    sourceCompatibility = JavaVersion.VERSION_11
-    targetCompatibility = JavaVersion.VERSION_11
+ext {
+    spark_compatible = findProperty('spark_compatible') ?: false
+    env = findProperty('env') ?: 'dev'
 }
 
-ext {
-    env = findProperty('env') ?: 'dev'
+java {
+    if (spark_compatible) {
+        println 'Spark compatible'
+        sourceCompatibility = JavaVersion.VERSION_1_8
+        targetCompatibility = JavaVersion.VERSION_1_8
+    } else {
+        sourceCompatibility = JavaVersion.VERSION_11
+        targetCompatibility = JavaVersion.VERSION_11
+    }
 }
 
 repositories {
@@ -87,7 +94,11 @@ publishing {
     publications {
         maven(MavenPublication) {
             groupId = 'org.opendatadiscovery'
-            artifactId = 'oddrn-generator-java'
+            if (spark_compatible) {
+                artifactId = 'oddrn-generator-java8'
+            } else {
+                artifactId = 'oddrn-generator-java'
+            }
             version = version
 
             from components.java
