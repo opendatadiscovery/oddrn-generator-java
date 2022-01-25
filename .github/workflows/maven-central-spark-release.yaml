@@ -1,4 +1,4 @@
-name: Maven Central release
+name: Maven Central spark compatible release
 
 on:
   workflow_dispatch:
