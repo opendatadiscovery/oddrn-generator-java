@@ -9,20 +9,13 @@ plugins {
 group = 'org.opendatadiscovery'
 version = file('VERSION').text
 
-ext {
-    java8_compatible = findProperty('java8_compatible') ?: false
-    env = findProperty('env') ?: 'dev'
+java {
+    sourceCompatibility = JavaVersion.VERSION_1_8
+    targetCompatibility = JavaVersion.VERSION_1_8
 }
 
-java {
-    if (java8_compatible) {
-        println 'Java8 compatible'
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
-    } else {
-        sourceCompatibility = JavaVersion.VERSION_11
-        targetCompatibility = JavaVersion.VERSION_11
-    }
+ext {
+    env = findProperty('env') ?: 'dev'
 }
 
 repositories {
@@ -94,11 +87,7 @@ publishing {
     publications {
         maven(MavenPublication) {
             groupId = 'org.opendatadiscovery'
-            if (java8_compatible) {
-                artifactId = 'oddrn-generator-java8'
-            } else {
-                artifactId = 'oddrn-generator-java'
-            }
+            artifactId = 'oddrn-generator-java'
             version = version
 
             from components.java
