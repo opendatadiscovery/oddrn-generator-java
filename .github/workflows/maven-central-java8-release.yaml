@@ -1,4 +1,4 @@
-name: Maven Central spark compatible release
+name: Maven Central java8 compatible release
 
 on:
   workflow_dispatch:
@@ -32,7 +32,7 @@ jobs:
           -Psigning.password="${{ secrets.SIGNING_PASSWORD }}"
           -Psigning.secretKeyRingFile=/tmp/secret_key.gpg
           -Penv=prod
-          -Pspark_compatible=true
+          -Pjava8_compatible=true
           clean publishToSonatype closeAndReleaseSonatypeStagingRepository
 
       - name: Update repository with up-to-date submodules and version

@@ -10,13 +10,13 @@ group = 'org.opendatadiscovery'
 version = file('VERSION').text
 
 ext {
-    spark_compatible = findProperty('spark_compatible') ?: false
+    java8_compatible = findProperty('java8_compatible') ?: false
     env = findProperty('env') ?: 'dev'
 }
 
 java {
-    if (spark_compatible) {
-        println 'Spark compatible'
+    if (java8_compatible) {
+        println 'Java8 compatible'
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8
     } else {
@@ -94,7 +94,7 @@ publishing {
     publications {
         maven(MavenPublication) {
             groupId = 'org.opendatadiscovery'
-            if (spark_compatible) {
+            if (java8_compatible) {
                 artifactId = 'oddrn-generator-java8'
             } else {
                 artifactId = 'oddrn-generator-java'
