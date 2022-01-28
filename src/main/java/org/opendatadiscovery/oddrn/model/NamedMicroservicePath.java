@@ -14,5 +14,4 @@ public class NamedMicroservicePath implements OddrnPath {
     public String prefix() {
         return "//microservice/named";
     }
-
 }

@@ -19,8 +19,11 @@ import org.opendatadiscovery.oddrn.annotation.PathField;
 import org.opendatadiscovery.oddrn.exception.EmptyPathValueException;
 import org.opendatadiscovery.oddrn.exception.PathDoesntExistException;
 import org.opendatadiscovery.oddrn.model.AirflowPath;
+import org.opendatadiscovery.oddrn.model.AwsS3Path;
+import org.opendatadiscovery.oddrn.model.CustomS3Path;
 import org.opendatadiscovery.oddrn.model.DynamodbPath;
 import org.opendatadiscovery.oddrn.model.GrpcServicePath;
+import org.opendatadiscovery.oddrn.model.HdfsPath;
 import org.opendatadiscovery.oddrn.model.HivePath;
 import org.opendatadiscovery.oddrn.model.KafkaConnectorPath;
 import org.opendatadiscovery.oddrn.model.KafkaPath;
@@ -30,9 +33,6 @@ import org.opendatadiscovery.oddrn.model.OddrnPath;
 import org.opendatadiscovery.oddrn.model.PostgreSqlPath;
 import org.opendatadiscovery.oddrn.model.SnowflakePath;
 import org.opendatadiscovery.oddrn.model.SparkPath;
-import org.opendatadiscovery.oddrn.model.AwsS3Path;
-import org.opendatadiscovery.oddrn.model.CustomS3Path;
-import org.opendatadiscovery.oddrn.model.HdfsPath;
 import org.opendatadiscovery.oddrn.util.GeneratorUtil;
 
 import static java.util.Locale.ENGLISH;
@@ -42,6 +42,7 @@ public class Generator {
     static final String GET_PREFIX = "get";
 
     private static final Map<Class<?>, Function<String, ?>> RETURN_TYPE_MAPPING = new HashMap<>();
+
     static {
         RETURN_TYPE_MAPPING.put(String.class, identity());
         RETURN_TYPE_MAPPING.put(Integer.class, Integer::parseInt);
@@ -85,7 +86,7 @@ public class Generator {
         final Optional<OddrnPath> result = Optional.empty();
 
         for (final ModelDescription description : this.cache.values()) {
-            if (oddrn.startsWith(description.prefix+"/")) {
+            if (oddrn.startsWith(description.prefix + "/")) {
                 final String withoutPrefix = oddrn.substring(description.prefix.length());
                 final Object builder = description.builderMethod.invoke(null);
                 int nextFieldPos = 0;
