@@ -19,8 +19,11 @@ import org.opendatadiscovery.oddrn.annotation.PathField;
 import org.opendatadiscovery.oddrn.exception.EmptyPathValueException;
 import org.opendatadiscovery.oddrn.exception.PathDoesntExistException;
 import org.opendatadiscovery.oddrn.model.AirflowPath;
+import org.opendatadiscovery.oddrn.model.AwsS3Path;
+import org.opendatadiscovery.oddrn.model.CustomS3Path;
 import org.opendatadiscovery.oddrn.model.DynamodbPath;
 import org.opendatadiscovery.oddrn.model.GrpcServicePath;
+import org.opendatadiscovery.oddrn.model.HdfsPath;
 import org.opendatadiscovery.oddrn.model.HivePath;
 import org.opendatadiscovery.oddrn.model.KafkaConnectorPath;
 import org.opendatadiscovery.oddrn.model.KafkaPath;
@@ -30,9 +33,6 @@ import org.opendatadiscovery.oddrn.model.OddrnPath;
 import org.opendatadiscovery.oddrn.model.PostgreSqlPath;
 import org.opendatadiscovery.oddrn.model.SnowflakePath;
 import org.opendatadiscovery.oddrn.model.SparkPath;
-import org.opendatadiscovery.oddrn.model.AwsS3Path;
-import org.opendatadiscovery.oddrn.model.CustomS3Path;
-import org.opendatadiscovery.oddrn.model.HdfsPath;
 import org.opendatadiscovery.oddrn.util.GeneratorUtil;
 
 import static java.util.Locale.ENGLISH;
@@ -41,13 +41,15 @@ import static java.util.function.Function.identity;
 public class Generator {
     static final String GET_PREFIX = "get";
 
-    private static final Map<Class<?>, Function<String, ?>> RETURN_TYPE_MAPPING = Map.of(
-        String.class, identity(),
-        Integer.class, Integer::parseInt,
-        Long.class, Long::parseLong,
-        Double.class, Double::parseDouble,
-        Float.class, Float::parseFloat
-    );
+    private static final Map<Class<?>, Function<String, ?>> RETURN_TYPE_MAPPING = new HashMap<>();
+
+    static {
+        RETURN_TYPE_MAPPING.put(String.class, identity());
+        RETURN_TYPE_MAPPING.put(Integer.class, Integer::parseInt);
+        RETURN_TYPE_MAPPING.put(Long.class, Long::parseLong);
+        RETURN_TYPE_MAPPING.put(Double.class, Double::parseDouble);
+        RETURN_TYPE_MAPPING.put(Float.class, Float::parseFloat);
+    }
 
     private final Map<Class<? extends OddrnPath>, ModelDescription> cache =
         Stream.of(
@@ -84,7 +86,7 @@ public class Generator {
         final Optional<OddrnPath> result = Optional.empty();
 
         for (final ModelDescription description : this.cache.values()) {
-            if (oddrn.startsWith(description.prefix+"/")) {
+            if (oddrn.startsWith(description.prefix + "/")) {
                 final String withoutPrefix = oddrn.substring(description.prefix.length());
                 final Object builder = description.builderMethod.invoke(null);
                 int nextFieldPos = 0;

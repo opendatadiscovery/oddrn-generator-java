@@ -1,11 +1,11 @@
 package org.opendatadiscovery.oddrn.util;
 
 public class GeneratorUtil {
-    public static String escape(String value) {
+    public static String escape(final String value) {
         return value.replace("/", "\\\\");
     }
 
-    public static String unescape(String value) {
+    public static String unescape(final String value) {
         return value.replace("\\\\", "/");
     }
 }
