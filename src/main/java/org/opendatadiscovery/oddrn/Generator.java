@@ -54,27 +54,27 @@ public class Generator {
 
     private final Map<Class<? extends OddrnPath>, ModelDescription> cache =
         Stream.of(
-                AirflowPath.class,
-                DynamodbPath.class,
-                GrpcServicePath.class,
-                HivePath.class,
-                KafkaConnectorPath.class,
-                KafkaPath.class,
-                MysqlPath.class,
-                PostgreSqlPath.class,
-                SnowflakePath.class,
-                SparkPath.class,
-                AwsS3Path.class,
-                CustomS3Path.class,
-                HdfsPath.class,
-                ODDPlatformDataSourcePath.class,
-                ODDPlatformCollectorPath.class
-        ).collect(
-                Collectors.toMap(
-                        c -> c,
-                        this::generateModel
-                )
-        );
+            AirflowPath.class,
+            DynamodbPath.class,
+            GrpcServicePath.class,
+            HivePath.class,
+            KafkaConnectorPath.class,
+            KafkaPath.class,
+            MysqlPath.class,
+            PostgreSqlPath.class,
+            SnowflakePath.class,
+            SparkPath.class,
+            AwsS3Path.class,
+            CustomS3Path.class,
+            HdfsPath.class,
+            ODDPlatformDataSourcePath.class,
+            ODDPlatformCollectorPath.class
+    ).collect(
+            Collectors.toMap(
+                    c -> c,
+                    this::generateModel
+            )
+    );
 
     public static String capitalize(final String name) {
         if (name == null || name.length() == 0) {
