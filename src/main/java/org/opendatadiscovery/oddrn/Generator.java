@@ -28,6 +28,7 @@ import org.opendatadiscovery.oddrn.model.HivePath;
 import org.opendatadiscovery.oddrn.model.KafkaConnectorPath;
 import org.opendatadiscovery.oddrn.model.KafkaPath;
 import org.opendatadiscovery.oddrn.model.MysqlPath;
+import org.opendatadiscovery.oddrn.model.ODDPlatformCollectorPath;
 import org.opendatadiscovery.oddrn.model.ODDPlatformDataSourcePath;
 import org.opendatadiscovery.oddrn.model.OddrnPath;
 import org.opendatadiscovery.oddrn.model.PostgreSqlPath;
@@ -66,7 +67,8 @@ public class Generator {
             AwsS3Path.class,
             CustomS3Path.class,
             HdfsPath.class,
-            ODDPlatformDataSourcePath.class
+            ODDPlatformDataSourcePath.class,
+            ODDPlatformCollectorPath.class
         ).collect(
             Collectors.toMap(
                 c -> c,
