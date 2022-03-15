@@ -1,5 +1,17 @@
 package org.opendatadiscovery.oddrn;
 
+import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.function.Function;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import lombok.Builder;
 import lombok.Data;
 import lombok.SneakyThrows;
@@ -24,19 +36,6 @@ import org.opendatadiscovery.oddrn.model.SnowflakePath;
 import org.opendatadiscovery.oddrn.model.SparkPath;
 import org.opendatadiscovery.oddrn.util.GeneratorUtil;
 
-import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.function.Function;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
-
 import static java.util.Locale.ENGLISH;
 import static java.util.function.Function.identity;
 
@@ -54,28 +53,28 @@ public class Generator {
     }
 
     private final Map<Class<? extends OddrnPath>, ModelDescription> cache =
-            Stream.of(
-                    AirflowPath.class,
-                    DynamodbPath.class,
-                    GrpcServicePath.class,
-                    HivePath.class,
-                    KafkaConnectorPath.class,
-                    KafkaPath.class,
-                    MysqlPath.class,
-                    PostgreSqlPath.class,
-                    SnowflakePath.class,
-                    SparkPath.class,
-                    AwsS3Path.class,
-                    CustomS3Path.class,
-                    HdfsPath.class,
-                    ODDPlatformDataSourcePath.class,
-                    ODDPlatformCollectorPath.class
-            ).collect(
-                    Collectors.toMap(
-                            c -> c,
-                            this::generateModel
-                    )
-            );
+        Stream.of(
+                AirflowPath.class,
+                DynamodbPath.class,
+                GrpcServicePath.class,
+                HivePath.class,
+                KafkaConnectorPath.class,
+                KafkaPath.class,
+                MysqlPath.class,
+                PostgreSqlPath.class,
+                SnowflakePath.class,
+                SparkPath.class,
+                AwsS3Path.class,
+                CustomS3Path.class,
+                HdfsPath.class,
+                ODDPlatformDataSourcePath.class,
+                ODDPlatformCollectorPath.class
+        ).collect(
+                Collectors.toMap(
+                        c -> c,
+                        this::generateModel
+                )
+        );
 
     public static String capitalize(final String name) {
         if (name == null || name.length() == 0) {
