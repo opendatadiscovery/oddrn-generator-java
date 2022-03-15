@@ -69,12 +69,12 @@ public class Generator {
             HdfsPath.class,
             ODDPlatformDataSourcePath.class,
             ODDPlatformCollectorPath.class
-    ).collect(
+        ).collect(
             Collectors.toMap(
-                    c -> c,
-                    this::generateModel
+                c -> c,
+                this::generateModel
             )
-    );
+        );
 
     public static String capitalize(final String name) {
         if (name == null || name.length() == 0) {
