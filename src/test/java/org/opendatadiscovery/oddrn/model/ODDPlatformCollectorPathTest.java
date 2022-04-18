@@ -10,10 +10,10 @@ public class ODDPlatformCollectorPathTest extends AbstractGeneratorTest {
     public void shouldGenerateCollectorPath() throws Exception {
         shouldGeneratePath(
                 ODDPlatformCollectorPath.builder()
-                        .collectorId(1L)
+                        .collectorName("collectorName")
                         .build(),
-                "collectorId",
-                "//oddplatform/collectors/1"
+                "collectorName",
+                "//oddcollector/collectors/collectorName"
         );
     }
 
@@ -22,7 +22,7 @@ public class ODDPlatformCollectorPathTest extends AbstractGeneratorTest {
         shouldFail(
                 ODDPlatformCollectorPath.builder()
                         .build(),
-                "collectorId",
+                "collectorName",
                 EmptyPathValueException.class
         );
     }

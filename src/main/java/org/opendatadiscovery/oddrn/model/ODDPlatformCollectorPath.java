@@ -9,10 +9,10 @@ import org.opendatadiscovery.oddrn.annotation.PathField;
 public class ODDPlatformCollectorPath implements OddrnPath {
 
     @PathField(prefix = "collectors")
-    private final Long collectorId;
+    private final String collectorName;
 
     @Override
     public String prefix() {
-        return "//oddplatform";
+        return "//oddcollector";
     }
 }
