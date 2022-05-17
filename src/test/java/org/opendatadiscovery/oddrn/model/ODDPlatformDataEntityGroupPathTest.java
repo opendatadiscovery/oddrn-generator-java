@@ -10,11 +10,10 @@ public class ODDPlatformDataEntityGroupPathTest extends AbstractGeneratorTest {
     public void shouldGenerateDataEntityGroupPath() throws Exception {
         shouldGeneratePath(
                 ODDPlatformDataEntityGroupPath.builder()
-                        .type("KAFKA_SERVICE")
                         .id(1L)
                         .build(),
                 "id",
-                "//oddplatform_deg/type/KAFKA_SERVICE/dataEntityGroupId/1"
+                "//oddplatform_deg/id/1"
         );
     }
 

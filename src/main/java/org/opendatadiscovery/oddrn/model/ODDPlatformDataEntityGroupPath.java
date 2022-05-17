@@ -8,10 +8,7 @@ import org.opendatadiscovery.oddrn.annotation.PathField;
 @Builder(toBuilder = true)
 public class ODDPlatformDataEntityGroupPath implements OddrnPath {
 
-    @PathField(prefix = "type")
-    private String type;
-
-    @PathField(dependency = "type", prefix = "dataEntityGroupId")
+    @PathField
     private final Long id;
 
     @Override
