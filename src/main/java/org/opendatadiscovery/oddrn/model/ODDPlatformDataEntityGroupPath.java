@@ -6,13 +6,13 @@ import org.opendatadiscovery.oddrn.annotation.PathField;
 
 @Data
 @Builder(toBuilder = true)
-public class ODDPlatformCollectorPath implements OddrnPath {
+public class ODDPlatformDataEntityGroupPath implements OddrnPath {
 
-    @PathField(prefix = "collectors")
-    private final String collectorName;
+    @PathField
+    private final Long id;
 
     @Override
     public String prefix() {
-        return "//oddcollector";
+        return "//oddplatform_deg";
     }
 }
