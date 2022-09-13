@@ -14,7 +14,7 @@ public class AwsS3PathTest extends AbstractGeneratorTest {
                         .bucket("my_bucket")
                         .build(),
                 "bucket",
-                "//s3-aws/bucket/my_bucket"
+                "//s3/cloud/aws/buckets/my_bucket"
         );
     }
 
@@ -26,7 +26,7 @@ public class AwsS3PathTest extends AbstractGeneratorTest {
                         .key("file1")
                         .build(),
                 "key",
-                "//s3-aws/bucket/my_bucket/keys/file1"
+                "//s3/cloud/aws/buckets/my_bucket/keys/file1"
         );
     }
 
@@ -35,10 +35,10 @@ public class AwsS3PathTest extends AbstractGeneratorTest {
         shouldGeneratePath(
                 AwsS3Path.builder()
                         .bucket("my_bucket")
-                        .key("path/to/file1")
+                        .key("path/to/file1.csv")
                         .build(),
                 "key",
-                "//s3-aws/bucket/my_bucket/keys/path\\\\to\\\\file1"
+                "//s3/cloud/aws/buckets/my_bucket/keys/path\\\\to\\\\file1.csv"
         );
     }
 

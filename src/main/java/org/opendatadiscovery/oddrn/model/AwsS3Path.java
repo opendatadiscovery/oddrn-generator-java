@@ -7,7 +7,7 @@ import org.opendatadiscovery.oddrn.annotation.PathField;
 @Data
 @Builder
 public class AwsS3Path implements OddrnPath {
-    @PathField
+    @PathField(prefix = "buckets")
     private final String bucket;
 
     @PathField(dependency = "bucket", prefix = "keys")
@@ -15,6 +15,6 @@ public class AwsS3Path implements OddrnPath {
 
     @Override
     public String prefix() {
-        return "//s3-aws";
+        return "//s3/cloud/aws";
     }
 }
