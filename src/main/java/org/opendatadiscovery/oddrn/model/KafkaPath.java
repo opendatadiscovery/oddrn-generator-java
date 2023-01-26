@@ -8,9 +8,9 @@ import org.opendatadiscovery.oddrn.annotation.PathField;
 @Builder(toBuilder = true)
 public class KafkaPath implements OddrnPath {
     @PathField
-    private final String clusters;
+    private final String cluster;
 
-    @PathField(dependency = "host", prefix = "topics")
+    @PathField(dependency = "cluster", prefix = "topics")
     private final String topic;
 
     @PathField(dependency = "topic", prefix = "columns")
