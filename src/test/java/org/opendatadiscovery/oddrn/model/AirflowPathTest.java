@@ -13,7 +13,6 @@ public class AirflowPathTest extends AbstractGeneratorTest {
                 .host("1.1.1.1")
                 .dag("etl")
                 .build(),
-            "dag",
             "//airflow/host/1.1.1.1/dags/etl"
         );
     }
@@ -26,7 +25,6 @@ public class AirflowPathTest extends AbstractGeneratorTest {
                 .dag("etl")
                 .task("transform")
                 .build(),
-            "task",
             "//airflow/host/1.1.1.1/dags/etl/tasks/transform"
         );
     }
@@ -35,11 +33,9 @@ public class AirflowPathTest extends AbstractGeneratorTest {
     public void shouldFailRunPath() {
         shouldFail(
             AirflowPath.builder()
-                .host("1.1.1.1")
                 .dag("etl")
                 .run(UUID.randomUUID().toString())
                 .build(),
-            "run",
             EmptyPathValueException.class
         );
     }

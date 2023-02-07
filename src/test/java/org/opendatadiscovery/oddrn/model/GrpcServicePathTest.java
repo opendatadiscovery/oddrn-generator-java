@@ -13,7 +13,6 @@ public class GrpcServicePathTest extends AbstractGeneratorTest {
                 .service("helloworld")
                 .method("call")
                 .build(),
-            "method",
             "//grpc/host/1.1.1.1/services/helloworld/methods/call"
         );
     }
@@ -25,7 +24,6 @@ public class GrpcServicePathTest extends AbstractGeneratorTest {
                 .host("1.1.1.1")
                 .method("call")
                 .build(),
-            "method",
             EmptyPathValueException.class
         );
     }

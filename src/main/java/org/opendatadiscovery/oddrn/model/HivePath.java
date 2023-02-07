@@ -6,7 +6,7 @@ import org.opendatadiscovery.oddrn.annotation.PathField;
 
 @Data
 @Builder(toBuilder = true)
-public class HivePath implements OddrnPath {
+public class HivePath implements OddrnPath, RdsPath {
     @PathField
     private final String host;
 

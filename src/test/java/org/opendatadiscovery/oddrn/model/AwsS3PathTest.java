@@ -1,10 +1,9 @@
 package org.opendatadiscovery.oddrn.model;
 
+import java.util.UUID;
 import org.junit.jupiter.api.Test;
 import org.opendatadiscovery.oddrn.AbstractGeneratorTest;
 import org.opendatadiscovery.oddrn.exception.EmptyPathValueException;
-
-import java.util.UUID;
 
 public class AwsS3PathTest extends AbstractGeneratorTest {
     @Test
@@ -13,7 +12,6 @@ public class AwsS3PathTest extends AbstractGeneratorTest {
                 AwsS3Path.builder()
                         .bucket("my_bucket")
                         .build(),
-                "bucket",
                 "//s3/cloud/aws/buckets/my_bucket"
         );
     }
@@ -25,7 +23,6 @@ public class AwsS3PathTest extends AbstractGeneratorTest {
                         .bucket("my_bucket")
                         .key("file1")
                         .build(),
-                "key",
                 "//s3/cloud/aws/buckets/my_bucket/keys/file1"
         );
     }
@@ -37,7 +34,6 @@ public class AwsS3PathTest extends AbstractGeneratorTest {
                         .bucket("my_bucket")
                         .key("path/to/file1.csv")
                         .build(),
-                "key",
                 "//s3/cloud/aws/buckets/my_bucket/keys/path\\\\to\\\\file1.csv"
         );
     }
@@ -48,8 +44,7 @@ public class AwsS3PathTest extends AbstractGeneratorTest {
                 AwsS3Path.builder()
                         .key(UUID.randomUUID().toString())
                         .build(),
-                "key",
-                EmptyPathValueException.class
+            EmptyPathValueException.class
         );
     }
 }

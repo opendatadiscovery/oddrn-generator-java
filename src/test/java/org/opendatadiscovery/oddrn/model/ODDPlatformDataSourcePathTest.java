@@ -11,7 +11,6 @@ public class ODDPlatformDataSourcePathTest extends AbstractGeneratorTest {
             ODDPlatformDataSourcePath.builder()
                 .datasourceId(1L)
                 .build(),
-            "datasourceId",
             "//oddplatform/datasources/1"
         );
     }
@@ -21,7 +20,6 @@ public class ODDPlatformDataSourcePathTest extends AbstractGeneratorTest {
         shouldFail(
             ODDPlatformDataSourcePath.builder()
                 .build(),
-            "datasourceId",
             EmptyPathValueException.class
         );
     }

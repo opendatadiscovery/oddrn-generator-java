@@ -13,7 +13,6 @@ public class DynamodbPathTest extends AbstractGeneratorTest {
                 .region("eu-central-1")
                 .table("dtable")
                 .build(),
-            "table",
             "//dynamodb/cloud/aws/account/7771111/region/eu-central-1/tables/dtable"
         );
     }
@@ -27,7 +26,6 @@ public class DynamodbPathTest extends AbstractGeneratorTest {
                 .table("dtable")
                 .column("id")
                 .build(),
-            "column",
             "//dynamodb/cloud/aws/account/7771111/region/eu-central-1/tables/dtable/columns/id"
         );
     }
@@ -40,7 +38,6 @@ public class DynamodbPathTest extends AbstractGeneratorTest {
                 .region("eu-central-1")
                 .column("id")
                 .build(),
-            "column",
             EmptyPathValueException.class
         );
     }

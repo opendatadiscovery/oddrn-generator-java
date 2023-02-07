@@ -1,10 +1,9 @@
 package org.opendatadiscovery.oddrn.model;
 
+import java.util.UUID;
 import org.junit.jupiter.api.Test;
 import org.opendatadiscovery.oddrn.AbstractGeneratorTest;
-import org.opendatadiscovery.oddrn.exception.PathDoesntExistException;
-
-import java.util.UUID;
+import org.opendatadiscovery.oddrn.exception.EmptyPathValueException;
 
 public class HdfsPathTest extends AbstractGeneratorTest {
     @Test
@@ -14,7 +13,6 @@ public class HdfsPathTest extends AbstractGeneratorTest {
                         .site("sandbox.com:8020")
                         .path("path/to/file1.ext")
                         .build(),
-                "path",
                 "//hdfs/site/sandbox.com:8020/paths/path\\\\to\\\\file1.ext"
         );
     }
@@ -25,8 +23,7 @@ public class HdfsPathTest extends AbstractGeneratorTest {
                 HdfsPath.builder()
                         .path(UUID.randomUUID().toString())
                         .build(),
-                "name",
-                PathDoesntExistException.class
+            EmptyPathValueException.class
         );
     }
 }

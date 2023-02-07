@@ -7,10 +7,10 @@ import org.opendatadiscovery.oddrn.annotation.PathField;
 @Data
 @Builder(toBuilder = true)
 public class SnowflakePath implements OddrnPath {
-    @PathField(prefix = "warehouses")
-    private final String warehouse;
+    @PathField(prefix = "account")
+    private final String account;
 
-    @PathField(dependency = "warehouse", prefix = "databases")
+    @PathField(dependency = "account", prefix = "databases")
     private final String database;
 
     @PathField(dependency = "database", prefix = "schemas")

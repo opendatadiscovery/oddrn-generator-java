@@ -10,12 +10,12 @@ public class SnowflakeJdbcProcessor implements JdbcProcessor<SnowflakePath> {
     @Override
     public OddrnPath path(final String host, final String database) {
         return SnowflakePath.builder()
-            .warehouse(host.substring(0, host.indexOf(".")))
+            .account(host.substring(0, host.indexOf(".")))
             .build();
     }
 
     @Override
     public String url(final SnowflakePath path, final int port) {
-        return String.format("jdbc:%s://%s.snowflakecomputing.com", PREFIX, path.getWarehouse());
+        return String.format("jdbc:%s://%s.snowflakecomputing.com", PREFIX, path.getAccount());
     }
 }

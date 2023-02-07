@@ -86,14 +86,14 @@ public class JdbcUrlParserTest {
         test(
             "jdbc:snowflake://myorganization-myaccount.snowflakecomputing.com",
             SnowflakePath.builder()
-                .warehouse("myorganization-myaccount")
+                .account("myorganization-myaccount")
                 .build()
         );
 
         test(
             "jdbc:snowflake://myorganization-myaccount.snowflakecomputing.com?params=1",
             SnowflakePath.builder()
-                .warehouse("myorganization-myaccount")
+                .account("myorganization-myaccount")
                 .build()
         );
     }

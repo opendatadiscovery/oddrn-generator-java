@@ -1,10 +1,9 @@
 package org.opendatadiscovery.oddrn.model;
 
+import java.util.UUID;
 import org.junit.jupiter.api.Test;
 import org.opendatadiscovery.oddrn.AbstractGeneratorTest;
 import org.opendatadiscovery.oddrn.exception.EmptyPathValueException;
-
-import java.util.UUID;
 
 public class SparkPathTest extends AbstractGeneratorTest {
     @Test
@@ -14,7 +13,6 @@ public class SparkPathTest extends AbstractGeneratorTest {
                 .host("127.0.0.1")
                 .job("etl")
                 .build(),
-            "job",
             "//spark/host/127.0.0.1/jobs/etl"
         );
     }
@@ -27,7 +25,6 @@ public class SparkPathTest extends AbstractGeneratorTest {
                 .job("etl")
                 .run("affjfkhx2p")
                 .build(),
-            "run",
             "//spark/host/127.0.0.1/jobs/etl/runs/affjfkhx2p"
         );
     }
@@ -39,7 +36,6 @@ public class SparkPathTest extends AbstractGeneratorTest {
                 .host("127.0.0.1")
                 .run(UUID.randomUUID().toString())
                 .build(),
-            "run",
             EmptyPathValueException.class
         );
     }

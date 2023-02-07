@@ -10,9 +10,7 @@ public class NamedMicroservicePathTest extends AbstractGeneratorTest {
             NamedMicroservicePath.builder()
                 .name("odd-platform:latest")
                 .build(),
-            "name",
             "//microservice/named/name/odd-platform:latest"
         );
     }
-
 }

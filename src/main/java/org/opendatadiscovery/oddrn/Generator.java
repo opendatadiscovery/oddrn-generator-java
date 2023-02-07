@@ -5,10 +5,15 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Deque;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -17,6 +22,7 @@ import lombok.Data;
 import lombok.SneakyThrows;
 import org.opendatadiscovery.oddrn.annotation.PathField;
 import org.opendatadiscovery.oddrn.exception.EmptyPathValueException;
+import org.opendatadiscovery.oddrn.exception.GenerateException;
 import org.opendatadiscovery.oddrn.exception.PathDoesntExistException;
 import org.opendatadiscovery.oddrn.model.AirflowPath;
 import org.opendatadiscovery.oddrn.model.AwsS3Path;
@@ -43,6 +49,14 @@ public class Generator {
     static final String GET_PREFIX = "get";
 
     private static final Map<Class<?>, Function<String, ?>> RETURN_TYPE_MAPPING = new HashMap<>();
+
+    private static class LazyHolder {
+        static final Generator INSTANCE = new Generator();
+    }
+
+    public static Generator getInstance() {
+        return LazyHolder.INSTANCE;
+    }
 
     static {
         RETURN_TYPE_MAPPING.put(String.class, identity());
@@ -81,6 +95,10 @@ public class Generator {
             return name;
         }
         return name.substring(0, 1).toUpperCase(ENGLISH) + name.substring(1);
+    }
+
+    public void register(final Class<? extends OddrnPath> clazz) {
+        this.generateModel(clazz);
     }
 
     public Optional<OddrnPath> parse(final String oddrn)
@@ -132,32 +150,53 @@ public class Generator {
         return result;
     }
 
-    public String generate(final OddrnPath model, final String field)
-            throws PathDoesntExistException, IllegalAccessException,
-            InvocationTargetException, EmptyPathValueException {
+    public String generate(final OddrnPath path) throws GenerateException {
+        try {
+            final ModelDescription modelDescription = cache.computeIfAbsent(
+                path.getClass(),
+                this::generateModel
+            );
 
-        validatePath(model, field);
+            // find last none empty field
+            final Iterator<ModelField> iterator = modelDescription.fields.iterator();
+            ModelField field = null;
+            while (iterator.hasNext()) {
+                field = iterator.next();
+                final Object result = field.readMethod.invoke(path);
+                if (result != null) {
+                    break;
+                }
+            }
 
-        final ModelDescription modelDescription = cache.computeIfAbsent(
-            model.getClass(),
-            this::generateModel
-        );
+            if (field != null) {
+                return generate(path, modelDescription, field);
+            } else {
+                throw new GenerateException("All fields are empty");
+            }
+        } catch (Exception e) {
+            if (e instanceof GenerateException) {
+                throw (GenerateException) e;
+            } else {
+                throw new GenerateException("Generate error", e);
+            }
+        }
+    }
 
-        final Map<String, ModelField> fields = modelDescription.fields;
+    public String generate(final OddrnPath path, final ModelDescription description, final ModelField field)
+            throws GenerateException {
+        try {
+            validatePath(path, description, field);
 
-        final Optional<ModelField> first = Optional.ofNullable(fields.get(field));
+            final Map<String, ModelField> fields = description.fieldsMap;
 
-        if (first.isPresent()) {
             final List<ModelField> pathFields = new ArrayList<>();
 
-            ModelField currentField = first.get();
+            ModelField currentField = field;
             pathFields.add(currentField);
 
             while (currentField.pathField.dependency().length > 0
                 && !currentField.pathField.dependency()[0].isEmpty()
             ) {
-                boolean allFailed = false;
-
                 for (final String dependency : currentField.pathField.dependency()) {
                     if (!dependency.isEmpty()) {
                         final Optional<ModelField> find = Optional.ofNullable(fields.get(dependency));
@@ -165,26 +204,21 @@ public class Generator {
                         if (find.isPresent()) {
                             currentField = find.get();
                             pathFields.add(currentField);
-                            allFailed = false;
                             break;
                         } else {
-                            allFailed = true;
+                            throw new PathDoesntExistException(
+                                String.format("Path %s doesn't exist in generator",
+                                    String.join(" ,", currentField.pathField.dependency())
+                                )
+                            );
                         }
                     }
-                }
-
-                if (allFailed) {
-                    throw new PathDoesntExistException(
-                        String.format("Path %s doesn't exist in generator",
-                            String.join(" ,", currentField.pathField.dependency())
-                        )
-                    );
                 }
             }
 
             Collections.reverse(pathFields);
             final StringBuilder builder = new StringBuilder();
-            builder.append(model.prefix());
+            builder.append(path.prefix());
             for (final ModelField modelField : pathFields) {
                 final String prefix = modelField.pathField.prefix().isEmpty()
                     ? modelField.getField().getName()
@@ -193,81 +227,62 @@ public class Generator {
                 builder.append("/");
                 builder.append(prefix);
                 builder.append("/");
-                builder.append(GeneratorUtil.escape(modelField.readMethod.invoke(model).toString()));
+                builder.append(GeneratorUtil.escape(modelField.readMethod.invoke(path).toString()));
             }
 
             return builder.toString();
-        } else {
-            throw new PathDoesntExistException(
-                String.format("Path %s doesn't exist in generator", field)
-            );
+        } catch (Exception e) {
+            if (e instanceof GenerateException) {
+                throw (GenerateException) e;
+            } else {
+                throw new GenerateException("Generate error", e);
+            }
         }
     }
 
     public void validateAllPaths(final OddrnPath model)
-            throws PathDoesntExistException, IllegalAccessException,
-            InvocationTargetException, EmptyPathValueException {
+            throws GenerateException {
         final ModelDescription modelDescription = cache.computeIfAbsent(
             model.getClass(),
             this::generateModel
         );
 
-        for (final ModelField field : modelDescription.fields.values()) {
-            this.validatePath(model, field.field.getName());
+        for (final ModelField field : modelDescription.fields) {
+            this.validatePath(model, modelDescription, field);
         }
     }
 
-    public void validatePath(final OddrnPath model, final String field)
-            throws IllegalAccessException, PathDoesntExistException,
-            InvocationTargetException, EmptyPathValueException {
-        final ModelDescription description = cache.computeIfAbsent(
-            model.getClass(),
-            this::generateModel
-        );
+    public void validatePath(final OddrnPath path, final ModelDescription description, final ModelField field)
+            throws GenerateException {
+        try {
+            final String fieldName = field.name;
 
-        final Optional<ModelField> first = Optional.ofNullable(description.fields.get(field));
+            boolean allFailed = true;
+            Exception lastException = null;
 
-        if (first.isPresent()) {
-            final ModelField modelField = first.get();
-            final String fieldName = modelField.field.getName();
-
-            if (modelField.pathField.dependency().length > 0) {
-                boolean allFailed = false;
-
-                PathDoesntExistException lastPathException = null;
-                EmptyPathValueException lastEmptyException = null;
-
-                for (final String dependency : modelField.pathField.dependency()) {
+            if (field.pathField.dependency().length > 0) {
+                for (final String dependency : field.pathField.dependency()) {
                     if (!dependency.isEmpty()) {
+                        final ModelField modelField =
+                            description.fields.stream().filter(f -> f.name.equals(dependency)).findFirst()
+                                .orElseThrow(() -> new PathDoesntExistException(dependency));
                         try {
-                            validatePath(model, dependency);
+                            validatePath(path, description, modelField);
                             allFailed = false;
-                            break;
-                        } catch (PathDoesntExistException e) {
-                            allFailed = true;
-                            lastPathException = e;
-                        } catch (EmptyPathValueException e) {
-                            allFailed = true;
-                            lastEmptyException = e;
+                        } catch (Exception e) {
+                            lastException = e;
                         }
-                    }
-                }
-
-                if (allFailed) {
-                    if (lastPathException != null) {
-                        throw lastPathException;
-                    }
-                    if (lastEmptyException != null) {
-                        throw lastEmptyException;
                     }
                 }
             }
 
-            if (!modelField.pathField.nullable()
-                && (
-                modelField.getReadMethod().invoke(model) == null
-                    || modelField.getReadMethod().invoke(model).toString().isEmpty()
-                )
+            if (allFailed && lastException != null) {
+                throw lastException;
+            }
+
+            if (!field.pathField.nullable()
+                && (field.getReadMethod().invoke(path) == null
+                || field.getReadMethod().invoke(path).toString().isEmpty())
             ) {
                 throw new EmptyPathValueException(
                     String.format("'Attribute %s' is empty",
@@ -275,10 +290,12 @@ public class Generator {
                     )
                 );
             }
-        } else {
-            throw new PathDoesntExistException(
-                String.format("Path %s doesn't exist in generator", field)
-            );
+        } catch (Exception e) {
+            if (e instanceof GenerateException) {
+                throw (GenerateException) e;
+            } else {
+                throw new GenerateException("Generate error", e);
+            }
         }
     }
 
@@ -286,7 +303,7 @@ public class Generator {
     private ModelDescription generateModel(final Class<? extends OddrnPath> clazz) {
         final ModelDescription.ModelDescriptionBuilder descriptionBuilder = ModelDescription.builder();
 
-        final Map<String, ModelField> fields = new HashMap<>();
+        final Map<String, ModelField> fieldsMap = new HashMap<>();
         final Map<String, ModelField> prefixes = new HashMap<>();
 
         Class<?> currentClazz = clazz;
@@ -302,38 +319,79 @@ public class Generator {
         while (OddrnPath.class.isAssignableFrom(currentClazz)) {
             for (final Field field : currentClazz.getDeclaredFields()) {
                 final PathField[] pathFields = field.getAnnotationsByType(PathField.class);
-                final Method getMethod = clazz.getMethod(GET_PREFIX + capitalize(field.getName()));
-                final Method setMethod = builderClazz.getMethod(field.getName(), getMethod.getReturnType());
-
-                final ModelField model = ModelField.builder()
-                    .field(field)
-                    .pathField(pathFields[0])
-                    .readMethod(getMethod)
-                    .setMethod(setMethod)
-                    .build();
 
                 if (pathFields.length > 0) {
-                    fields.put(field.getName(), model);
+                    final Method getMethod = clazz.getMethod(GET_PREFIX + capitalize(field.getName()));
+                    final Method setMethod = builderClazz.getMethod(field.getName(), getMethod.getReturnType());
+
+                    final ModelField model = ModelField.builder()
+                        .name(field.getName())
+                        .field(field)
+                        .pathField(pathFields[0])
+                        .readMethod(getMethod)
+                        .setMethod(setMethod)
+                        .build();
+
+                    final PathField pathField = pathFields[0];
+                    final String fieldPrefix = pathField.prefix().isEmpty() ? field.getName() : pathField.prefix();
+                    fieldsMap.put(field.getName(), model);
                     prefixes.put(
-                        pathFields[0].prefix().isEmpty() ? field.getName() : pathFields[0].prefix(),
+                        fieldPrefix,
                         model
                     );
                 }
             }
-
             currentClazz = currentClazz.getSuperclass();
+        }
+
+        final LinkedList<ModelField> fields = new LinkedList<>();
+        final LinkedList<String> fieldNames = new LinkedList<>();
+        final Set<String> processedFields = new HashSet<>();
+        final Deque<String> fieldsToProcess = new LinkedList<>(fieldsMap.keySet());
+
+        while (!fieldsToProcess.isEmpty()) {
+            final String fieldName = fieldsToProcess.pop();
+            if (!processedFields.contains(fieldName)) {
+                final ModelField modelField = fieldsMap.get(fieldName);
+                final String[] dependency = modelField.pathField.dependency();
+                final List<String> dependencies = new ArrayList<>();
+
+                if (dependency != null && dependency.length > 0) {
+                    boolean restart = false;
+                    for (final String dependencyName : dependency) {
+                        if (!dependencyName.isEmpty()) {
+                            dependencies.add(dependencyName);
+                            if (!processedFields.contains(dependencyName)) {
+                                fieldsToProcess.push(fieldName);
+                                fieldsToProcess.push(dependencyName);
+                                restart = true;
+                            }
+                        }
+                    }
+                    if (restart) {
+                        continue;
+                    }
+                }
+
+                final int pos = dependencies.stream().mapToInt(fieldNames::indexOf).max().orElse(0);
+                fields.add(pos, fieldsMap.get(fieldName));
+                fieldNames.add(pos, fieldName);
+                processedFields.add(fieldName);
+            }
         }
 
         descriptionBuilder.prefixes(prefixes);
         descriptionBuilder.fields(fields);
+        descriptionBuilder.fieldsMap(fieldsMap);
         return descriptionBuilder.build();
     }
 
     @Data
     @Builder
     private static class ModelDescription {
-        private final Map<String, ModelField> fields;
         private final Map<String, ModelField> prefixes;
+        private final Map<String, ModelField> fieldsMap;
+        private final List<ModelField> fields;
         private final String prefix;
         private final Method builderMethod;
     }
@@ -341,6 +399,7 @@ public class Generator {
     @Data
     @Builder
     private static class ModelField {
+        private final String name;
         private final Field field;
         private final Method readMethod;
         private final Method setMethod;

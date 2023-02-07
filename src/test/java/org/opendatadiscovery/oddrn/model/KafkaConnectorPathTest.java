@@ -13,7 +13,6 @@ public class KafkaConnectorPathTest extends AbstractGeneratorTest {
                 .host("1.1.1.1")
                 .connector("sink")
                 .build(),
-            "connector",
             "//kafkaconnect/host/1.1.1.1/connectors/sink"
         );
     }
@@ -24,7 +23,6 @@ public class KafkaConnectorPathTest extends AbstractGeneratorTest {
             KafkaConnectorPath.builder()
                 .connector("sink")
                 .build(),
-            "connector",
             EmptyPathValueException.class
         );
     }
