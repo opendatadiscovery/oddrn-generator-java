@@ -282,7 +282,7 @@ public class Generator {
 
             if (!field.pathField.nullable()
                 && (field.getReadMethod().invoke(path) == null
-                || field.getReadMethod().invoke(path).toString().isEmpty())
+                || field.getReadMethod().invoke(path).toString().trim().isEmpty())
             ) {
                 throw new EmptyPathValueException(
                     String.format("'Attribute %s' is empty",

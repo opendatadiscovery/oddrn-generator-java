@@ -1,6 +1,6 @@
 package org.opendatadiscovery.oddrn.exception;
 
-public class GenerateException extends Exception {
+public class GenerateException extends RuntimeException {
     public GenerateException(final String message) {
         super(message);
     }
