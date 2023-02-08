@@ -10,11 +10,10 @@ public class KafkaPathTest extends AbstractGeneratorTest {
     public void shouldGenerateDatabasePath() throws Exception {
         shouldGeneratePath(
             KafkaPath.builder()
-                .host("1.1.1.1")
+                .cluster("1.1.1.1")
                 .topic("topic-test")
                 .build(),
-            "topic",
-            "//kafka/host/1.1.1.1/topics/topic-test"
+            "//kafka/cluster/1.1.1.1/topics/topic-test"
         );
     }
 
@@ -22,12 +21,11 @@ public class KafkaPathTest extends AbstractGeneratorTest {
     public void shouldGenerateColumnPath() throws Exception {
         shouldGeneratePath(
             KafkaPath.builder()
-                .host("1.1.1.1")
+                .cluster("1.1.1.1")
                 .topic("topic-test")
                 .column("topic-column")
                 .build(),
-            "column",
-            "//kafka/host/1.1.1.1/topics/topic-test/columns/topic-column"
+            "//kafka/cluster/1.1.1.1/topics/topic-test/columns/topic-column"
         );
     }
 
@@ -35,10 +33,9 @@ public class KafkaPathTest extends AbstractGeneratorTest {
     public void shouldFailTablePath() {
         shouldFail(
             KafkaPath.builder()
-                .host("1.1.1.1")
+                .cluster("1.1.1.1")
                 .column("topic-column")
                 .build(),
-            "column",
             EmptyPathValueException.class
         );
     }

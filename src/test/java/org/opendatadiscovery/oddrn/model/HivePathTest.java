@@ -12,7 +12,6 @@ public class HivePathTest extends AbstractGeneratorTest {
                 .host("1.1.1.1")
                 .database("dbname")
                 .build(),
-            "database",
             "//hive/host/1.1.1.1/databases/dbname"
         );
     }
@@ -27,7 +26,6 @@ public class HivePathTest extends AbstractGeneratorTest {
                 .table("test")
                 .column("id")
                 .build(),
-            "column",
             "//hive/host/1.1.1.1/databases/dbname/schemas/public/tables/test/columns/id"
         );
     }
@@ -40,7 +38,6 @@ public class HivePathTest extends AbstractGeneratorTest {
                 .database("dbname")
                 .table("test")
                 .build(),
-            "table",
             EmptyPathValueException.class
         );
     }

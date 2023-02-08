@@ -10,10 +10,9 @@ public class HttpServicePathTest extends AbstractGeneratorTest {
         shouldGeneratePath(
             HttpServicePath.builder()
                 .host("1.1.1.1")
-                .path("/entites/1")
                 .method("GET")
+                .path("/entites/1")
                 .build(),
-            "path",
             "//http/host/1.1.1.1/method/GET/path/\\\\entites\\\\1"
         );
     }
@@ -25,7 +24,6 @@ public class HttpServicePathTest extends AbstractGeneratorTest {
                 .host("1.1.1.1")
                 .path("/entites/1")
                 .build(),
-            "path",
             EmptyPathValueException.class
         );
     }

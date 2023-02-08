@@ -12,7 +12,6 @@ public class ODDPlatformDataEntityGroupPathTest extends AbstractGeneratorTest {
                 ODDPlatformDataEntityGroupPath.builder()
                         .id(1L)
                         .build(),
-                "id",
                 "//oddplatform_deg/id/1"
         );
     }
@@ -22,9 +21,7 @@ public class ODDPlatformDataEntityGroupPathTest extends AbstractGeneratorTest {
         shouldFail(
                 ODDPlatformDataEntityGroupPath.builder()
                         .build(),
-                "id",
                 EmptyPathValueException.class
         );
     }
-
 }

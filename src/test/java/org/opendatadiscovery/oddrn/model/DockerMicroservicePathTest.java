@@ -10,9 +10,7 @@ public class DockerMicroservicePathTest extends AbstractGeneratorTest {
             DockerMicroservicePath.builder()
                 .image("ghcr.io/opendatadiscovery/odd-platform:latest")
                 .build(),
-            "image",
             "//microservice/docker/image/ghcr.io\\\\opendatadiscovery\\\\odd-platform:latest"
         );
     }
-
 }

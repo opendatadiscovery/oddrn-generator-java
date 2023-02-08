@@ -13,7 +13,6 @@ public class MysqlTest extends AbstractGeneratorTest {
                 .host("1.1.1.1")
                 .database("dbname")
                 .build(),
-            "database",
             "//mysql/host/1.1.1.1/databases/dbname"
         );
     }
@@ -27,7 +26,6 @@ public class MysqlTest extends AbstractGeneratorTest {
                 .table("test")
                 .column("id")
                 .build(),
-            "column",
             "//mysql/host/1.1.1.1/databases/dbname/tables/test/columns/id"
         );
     }
@@ -39,7 +37,6 @@ public class MysqlTest extends AbstractGeneratorTest {
                 .host("1.1.1.1")
                 .table("test")
                 .build(),
-            "table",
             EmptyPathValueException.class
         );
     }

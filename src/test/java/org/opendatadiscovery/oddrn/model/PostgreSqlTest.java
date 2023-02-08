@@ -13,7 +13,6 @@ public class PostgreSqlTest extends AbstractGeneratorTest {
                 .host("1.1.1.1")
                 .database("dbname")
                 .build(),
-            "database",
             "//postgresql/host/1.1.1.1/databases/dbname"
         );
     }
@@ -28,7 +27,6 @@ public class PostgreSqlTest extends AbstractGeneratorTest {
                 .table("test")
                 .column("id")
                 .build(),
-            "column",
             "//postgresql/host/1.1.1.1/databases/dbname/schemas/public/tables/test/columns/id"
         );
     }
@@ -41,7 +39,6 @@ public class PostgreSqlTest extends AbstractGeneratorTest {
                 .database("dbname")
                 .table("test")
                 .build(),
-            "table",
             EmptyPathValueException.class
         );
     }
