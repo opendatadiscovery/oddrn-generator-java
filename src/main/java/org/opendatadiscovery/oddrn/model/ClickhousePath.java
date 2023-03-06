@@ -5,7 +5,7 @@ import lombok.Data;
 import org.opendatadiscovery.oddrn.annotation.PathField;
 
 @Data
-@Builder
+@Builder(toBuilder = true)
 public class ClickhousePath implements OddrnPath {
     @PathField
     private final String host;
@@ -29,11 +29,4 @@ public class ClickhousePath implements OddrnPath {
     public String prefix() {
         return "//clickhouse";
     }
-
-//        "databases": ("databases",),
-//        "tables": ("databases", "tables"),
-//        "views": ("databases", "views"),
-//        "tables_columns": ("databases", "tables", "tables_columns"),
-//        "views_columns": ("databases", "views", "views_columns"),
-//    host
 }
