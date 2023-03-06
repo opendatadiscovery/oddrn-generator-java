@@ -1,11 +1,14 @@
 package org.opendatadiscovery.oddrn;
 
 import java.util.Map;
+
+import org.opendatadiscovery.oddrn.model.ClickhousePath;
 import org.opendatadiscovery.oddrn.model.HivePath;
 import org.opendatadiscovery.oddrn.model.MysqlPath;
 import org.opendatadiscovery.oddrn.model.OddrnPath;
 import org.opendatadiscovery.oddrn.model.PostgreSqlPath;
 import org.opendatadiscovery.oddrn.model.SnowflakePath;
+import org.opendatadiscovery.oddrn.processor.ClickhouseJdbcProcessor;
 import org.opendatadiscovery.oddrn.processor.Hive2JdbcProcessor;
 import org.opendatadiscovery.oddrn.processor.JdbcProcessor;
 import org.opendatadiscovery.oddrn.processor.MysqlJdbcProcessor;
@@ -17,14 +20,16 @@ public class JdbcProcessors {
         MysqlJdbcProcessor.PREFIX, new MysqlJdbcProcessor(),
         PostgreSqlJdbcProcessor.PREFIX, new PostgreSqlJdbcProcessor(),
         SnowflakeJdbcProcessor.PREFIX, new SnowflakeJdbcProcessor(),
-        Hive2JdbcProcessor.PREFIX, new Hive2JdbcProcessor()
+        Hive2JdbcProcessor.PREFIX, new Hive2JdbcProcessor(),
+        ClickhouseJdbcProcessor.PREFIX, new ClickhouseJdbcProcessor()
     );
 
     private final Map<Class<? extends OddrnPath>, JdbcProcessor<? extends OddrnPath>> processorMapByClass = Map.of(
         MysqlPath.class, new MysqlJdbcProcessor(),
         PostgreSqlPath.class, new PostgreSqlJdbcProcessor(),
         SnowflakePath.class, new SnowflakeJdbcProcessor(),
-        HivePath.class, new Hive2JdbcProcessor()
+        HivePath.class, new Hive2JdbcProcessor(),
+        ClickhousePath.class, new ClickhouseJdbcProcessor()
     );
 
     public OddrnPath path(final String driver, final String host, final String database) {
